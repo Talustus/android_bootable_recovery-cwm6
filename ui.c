@@ -492,12 +492,12 @@ static int input_callback(int fd, short revents, void *data)
         rel_sum = 0;
     }
 
-    if (ev.type == 3 && ev.code == 48 && ev.value != 0) {
+    if (ev.type == 3 && ev.code == 57 && ev.value != -1) {
         if (in_touch == 0) {
             in_touch = 1; //starting to track touch...
             reset_gestures();
         }
-    } else if (ev.type == 3 && ev.code == 48 && ev.value == 0) {
+    } else if (ev.type == 3 && ev.code == 57 && ev.value == -1) {
             //finger lifted! lets run with this
             ev.type = EV_KEY; //touch panel support!!!
             int keywidth = gr_get_width(surface) / 4;
@@ -518,19 +518,22 @@ static int input_callback(int fd, short revents, void *data)
                     reset_gestures();
                 } else {
                     //enter key
-                    ev.code = KEY_ENTER;
+                    ev.code = KEY_POWER;
                     reset_gestures();
                 }
-                vibrate(VIBRATOR_TIME_MS);
+                //if (vibration_enabled) {
+                   vibrate(VIBRATOR_TIME_MS);
+                //}
             }
+	     /*
             if (slide_right == 1) {
-                ev.code = KEY_ENTER;
+                ev.code = KEY_POWER;
                 slide_right = 0;
             } else if (slide_left == 1) {
                 ev.code = KEY_BACK;
                 slide_left = 0;
             }
-
+	     */
             ev.value = 1;
             in_touch = 0;
             reset_gestures();
@@ -1208,7 +1211,7 @@ int input_buttons()
         end_draw = (keywidth * 3) + keyoffset;
     } else if (touch_x < ((keywidth * 4) + keyoffset + 1)) {
         //enter key
-        final_code = KEY_ENTER;
+        final_code = KEY_POWER;
         start_draw = (keywidth * 3) + keyoffset + 1;
         end_draw = (keywidth * 4) + keyoffset;
     }
